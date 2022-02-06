@@ -1,32 +1,29 @@
 import React from 'react';
 import './App.css';
-import {AppBar, Container, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Grid, Toolbar} from "@material-ui/core";
 import {Route} from "react-router-dom";
-import {Menu} from "@material-ui/icons";
+import {Logo} from "../components/logo/Logo";
+import {Cart} from "../features/cart/Cart";
+import {Cards} from "../features/cards/Cards";
 
 function App() {
-  return (
-    <div className="App">
-      <div className="App">
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <Menu/>
-            </IconButton>
-            <Typography variant="h6">
-              News
-            </Typography>
+    return (
+        <div className="App">
+            <div className="App">
+                <AppBar position="static">
+                    <Toolbar className='nav'>
+                        <Logo/>
+                        <Cart/>
+                    </Toolbar>
 
-          </Toolbar>
-
-        </AppBar>
-        <Container fixed>
-          <Route exact path={'/'} render={() => <div>123</div>}/>
-          <Route exact path={'/'} render={() => <div>456</div>}/>
-        </Container>
-      </div>
-    </div>
-  )
+                </AppBar>
+                <Grid container spacing={2} justifyContent="center">
+                    <Route exact path={'/'} render={() => <Cards />}/>
+                    <Route path={'/cart'} render={() => <Cart/>}/>
+                </Grid>
+            </div>
+        </div>
+    )
 }
 
 export default App
