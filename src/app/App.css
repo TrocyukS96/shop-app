@@ -36,9 +36,13 @@
     transform: rotate(360deg);
   }
 }
+.navBox{
+  position: fixed;
+}
 .nav{
   display: flex;
   justify-content: space-between;
+  position: fixed;
 }
 
 .gridContainer{

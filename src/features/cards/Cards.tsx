@@ -1,10 +1,10 @@
-import { ProductCard} from "../Card";
 import React from "react";
-
+import {ProductCard} from "./productCard/ProductCard";
+import s from './Cards.module.scss';
 
 export const Cards = () => {
     return (
-        <div className='gridContainer'>
+        <div className={s.cardsBlock}>
                 <ProductCard/>
                 <ProductCard/>
                 <ProductCard/>

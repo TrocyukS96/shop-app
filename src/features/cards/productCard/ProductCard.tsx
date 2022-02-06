@@ -1,13 +1,12 @@
 import CardContent from "@material-ui/core/CardContent"
-import Typography from "@material-ui/core/Typography"
 import {Button, Card, CardActions, CardMedia} from "@material-ui/core";
-import productWaffles from '../assets/images/products/products_img.jpg'
-import familyShot from '../assets/images/products/bt-products-family-shot.png'
+import productWaffles from '../../../assets/images/products/products_img.jpg'
+import s from './ProductCard.module.scss';
 
 export const ProductCard = () => {
     return (
         <Card >
-            <CardContent>
+            <CardContent className={s.contnent}>
                 <CardMedia
                     component="img"
                     alt="waffles"
@@ -16,8 +15,8 @@ export const ProductCard = () => {
                 />
                 123
             </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
+            <CardActions style={{justifyContent:"center"}}>
+                <Button size="small" className={s.cardBtn}>Learn More</Button>
             </CardActions>
         </Card>
     )
