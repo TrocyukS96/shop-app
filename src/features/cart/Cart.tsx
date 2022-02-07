@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
-import {Link} from "@material-ui/core";
+import React from 'react';
 import s from './Cart.module.scss';
 import {CartItem} from "./cartItem/CartItem";
 import {CartForm} from "./cartForm/CartForm";
 
 export const Cart = () => {
-    const [total, setTotal] = useState(null)
     return (
         <div className={s.cart}>
 
