@@ -2,7 +2,13 @@ import React from 'react';
 import s from './CartForm.module.scss';
 import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
+import {
+    collection,
+    addDoc
 
+} from "firebase/firestore";
+import {db} from "../../../firebase";
+import skateImg3 from "../../../assets/images/skates/alphaCapricePlayer.jpg";
 //types
 type FormValuesType = {
     name: string
@@ -10,7 +16,6 @@ type FormValuesType = {
     address: string
     phone: string
 }
-
 
 export const CartForm = () => {
     const formik = useFormik({
@@ -22,9 +27,21 @@ export const CartForm = () => {
             address: '',
             phone: ''
         },
-        onSubmit:  (values: FormValuesType) => {
-            alert(JSON.stringify(values))
-            formik.resetForm()
+        onSubmit:  async(values: FormValuesType) => {
+            const item = {
+                task: 'Mara',
+                done: false,
+            };
+            const usersCollectionRef = collection(db, "users");
+             const skatesCollectionRef = collection(db, "skates");
+           // await addDoc(usersCollectionRef, {name:'adaw', age:123})
+            await addDoc(skatesCollectionRef,     {
+                img:skateImg3,
+                type:'ice skates',
+                name:"alpha Caprice Frosty Silver",
+                price:132,
+                freeShipping:true
+            },)
         },
     })
     return (

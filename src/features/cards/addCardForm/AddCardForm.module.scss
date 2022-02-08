@@ -1,0 +1,44 @@
+.cardForm {
+  display: flex;
+  flex-direction: column;
+
+  max-height: 600px;
+
+  box-shadow: rgba(78, 63, 164, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+  padding: 8px;
+
+  border-top: none;
+
+  .cardImg {
+    width: 100px;
+
+    align-self: center;
+  }
+  span{
+    margin-top: 10px;
+  }
+
+  .checkbox {
+    width: 40px;
+
+    padding: 5px;
+    border-bottom: none;
+
+    text-decoration: none;
+
+    .checkbox::before {
+      border: none;
+    }
+  }
+
+  .cartBtn {
+    margin-top: 10px;
+  }
+
+}
+
+input::before {
+
+  border: none;
+
+}
