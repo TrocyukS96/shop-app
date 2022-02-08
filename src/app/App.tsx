@@ -1,22 +1,21 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {AppBar, Grid, Link, Toolbar} from "@material-ui/core";
+import {AppBar, CircularProgress, Grid, Link, Toolbar} from "@material-ui/core";
 import {Redirect, Route, Switch} from "react-router-dom";
 import {Logo} from "../components/logo/Logo";
 import {Cart} from "../features/cart/Cart";
 import {Cards} from "../features/cards/Cards";
-import {collection,getDocs} from "firebase/firestore";
-import {db} from "../firebase";
+import {useDispatch, useSelector} from "react-redux";
+import {getCards} from "../bll/cards-reducer";
+import {RootStateType} from "./store";
+import {RequestStatusType} from "../features/application/application-reducer";
 
-const skatesCollectionRef = collection(db, "skates");
 function App() {
+    const status = useSelector<RootStateType, RequestStatusType>(st => st.app.status)
+    const dispatch = useDispatch()
     useEffect(() => {
-            getDocs(skatesCollectionRef)
-                .then(res=>console.log(res.docs[1].data().img))
-
-    }, []);
-
-
+        dispatch(getCards())
+    }, [dispatch]);
     return (
         <div className="App">
             <div className="App">
@@ -30,10 +29,14 @@ function App() {
 
                 </AppBar>
 
-                <Grid container spacing={2} justifyContent="center" style={{overflow: 'auto'}}>
+                <Grid container spacing={2} justifyContent="center" >
                     <Switch>
                         <Route exact path={'/products'}>
-                            <Cards/>
+                            {
+                                status === 'loading'
+                                    ? <CircularProgress style={{width: '200px', height: '200px', marginTop:'20%'}}/>
+                            : <Cards/>
+                            }
                         </Route>
                         <Route path={'/cart'}>
                             <Cart/>

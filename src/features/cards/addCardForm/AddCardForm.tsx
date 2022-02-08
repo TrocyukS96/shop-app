@@ -2,17 +2,8 @@ import React, {ChangeEvent, useState} from 'react';
 import s from './AddCardForm.module.scss';
 import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
-import {makeStyles} from "@material-ui/core/styles";
-import {addDoc} from "firebase/firestore";
-import {skatesCollectionRef} from "../Cards";
-
-//materialUI styles
-const useStyles = makeStyles(() => ({
-    noBorder: {
-        borderBottom: "none",
-    },
-}));
-
+import {useDispatch} from "react-redux";
+import {addCard} from "../../../bll/cards-reducer";
 
 //types
 type FormValuesType = {
@@ -31,10 +22,9 @@ export const AddCardForm = () => {
     const [file64, setFile64] = useState<any>();
     const [base64, setBase64] = useState(true);
     const [code, setCode] = useState(true);
+    const dispatch = useDispatch()
 
     const upload = (e: ChangeEvent<HTMLInputElement>) => {
-        // debugger
-        // e.preventDefault();
         const reader = new FileReader();
         const formData = new FormData(); // for send to back
         const newFile = e.target.files && e.target.files[0];  //достаем из таргета файлы, если файлы есть - прилетает массив, откуда достаем 0
@@ -54,7 +44,6 @@ export const AddCardForm = () => {
             }
         }
     };
-    const classes = useStyles();
     const formik = useFormik({
         validate: (values) => {
         },
@@ -65,20 +54,16 @@ export const AddCardForm = () => {
             freeShipping: false
         },
         onSubmit: (values: FormValuesType) => {
-            console.log({
-                image: file64,
-                name: values.name,
-                type: values.type,
-                freeShipping: values.freeShipping
-            })
             const formData =
                 {
                     image: file64,
                     name: values.name,
                     type: values.type,
+                    price:values.price,
                     freeShipping: values.freeShipping
                 }
-            addDoc(skatesCollectionRef, formData)
+            dispatch(addCard(formData))
+
             formik.resetForm()
             setFile64('')
             setFile('')
