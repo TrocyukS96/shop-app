@@ -37,7 +37,8 @@ export const getCards = () => async (dispatch: Dispatch) => {
             name: doc.data().name,
             type: doc.data().type,
             price: doc.data().price,
-            cardId:doc.id
+            cardId:doc.id,
+            count:doc.data().count
         }
     })
     dispatch(setCardsAc(filteredData))

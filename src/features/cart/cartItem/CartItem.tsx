@@ -1,6 +1,5 @@
 import React, {FC, useState} from 'react';
 import s from './CartItem.module.scss';
-import {useDispatch} from "react-redux";
 
 //types
 type CartItemType = {
@@ -10,6 +9,8 @@ type CartItemType = {
     image: string
     itemId?: string
     deleteCartItem: (cartItemId: string) => void
+    updateCartItem: (cartItemId: string, count: number) => void
+    itemCount?: number
 }
 export const CartItem: FC<CartItemType> = ({
                                                itemId,
@@ -17,20 +18,25 @@ export const CartItem: FC<CartItemType> = ({
                                                price,
                                                image,
                                                name,
-                                               deleteCartItem
+                                               deleteCartItem,
+                                               updateCartItem,
+                                               itemCount
                                            }) => {
-    const [counter, setCounter] = useState(1)
-    const dispatch= useDispatch()
     //handlers
-    const toIncrCounter = () => {
-        setCounter(counter + 1)
+    const toIncrCartItemHandler = () => {
+        itemId && itemCount &&
+        updateCartItem(itemId, itemCount+1)
     }
-    const toDecrCounter = () => {
-        setCounter(counter - 1)
+    const toDecrCartItemHandler = () => {
+        itemId && itemCount &&
+        updateCartItem(itemId, itemCount-1)
     }
     const deleteCartItemHandler = () => {
         itemId &&
         deleteCartItem(itemId)
+    }
+    if(itemCount===0){
+        deleteCartItemHandler()
     }
     return (
         <div className={s.cartItem}>
@@ -42,9 +48,9 @@ export const CartItem: FC<CartItemType> = ({
             </p>
 
             <div className={s.btnBlock}>
-                <button onClick={toDecrCounter}>-</button>
-                <span>{counter}</span>
-                <button onClick={toIncrCounter}>+</button>
+                <button onClick={toDecrCartItemHandler}>-</button>
+                <span>{itemCount}</span>
+                <button onClick={toIncrCartItemHandler}>+</button>
             </div>
             <button className={s.deleteItemBtn} onClick={deleteCartItemHandler}>x</button>
         </div>

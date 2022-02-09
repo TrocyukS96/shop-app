@@ -4,6 +4,7 @@ import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
 import {useDispatch} from "react-redux";
 import {addCard} from "../cards-reducer";
+import {CardType} from "../../../utils/types";
 
 //types
 type FormValuesType = {
@@ -54,13 +55,14 @@ export const AddCardForm = () => {
             freeShipping: false
         },
         onSubmit: (values: FormValuesType) => {
-            const formData =
+            const formData:CardType =
                 {
                     image: file64,
                     name: values.name,
                     type: values.type,
                     price:values.price,
-                    freeShipping: values.freeShipping
+                    freeShipping: values.freeShipping,
+                    count:1
                 }
             dispatch(addCard(formData))
 

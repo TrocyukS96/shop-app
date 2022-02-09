@@ -1,4 +1,4 @@
-import {addDoc, collection, getDocs, doc, deleteDoc} from "firebase/firestore";
+import {addDoc, collection, getDocs, doc, deleteDoc,updateDoc} from "firebase/firestore";
 import {db} from "../firebase";
 //collections
 const cartCollectionRef = collection(db, "cart");
@@ -19,4 +19,10 @@ export const cartApi = {
     sendOrder(orderData:any){
         return addDoc(ordersCollectionRef, orderData)
     },
+    updatePurchaseCount(cardId:string,count:number){
+        // @ts-ignore
+        const checkedItem = doc(db,"cart", cardId);
+        const newFields = { count };
+        return updateDoc(checkedItem,newFields)
+    }
 }

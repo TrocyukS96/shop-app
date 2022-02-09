@@ -7,7 +7,8 @@ import {CardType} from "../../utils/types";
 
 //initialValue
 const initialState: InitialStateType = {
-    purchases: [] as CardType[]
+    purchases: [] as CardType[],
+    count:0
 }
 
 export const cartReducer = (state: InitialStateType = initialState, action: ActionsType) => {
@@ -19,6 +20,10 @@ export const cartReducer = (state: InitialStateType = initialState, action: Acti
             return {
                 ...state, purchases: [...action.cartItems],
             }
+        case 'cart/SET-PURCHASE-COUNT':
+            return {
+                ...state, count: action.count,
+            }
         default:
             return state
     }
@@ -26,13 +31,14 @@ export const cartReducer = (state: InitialStateType = initialState, action: Acti
 //actionCreators
 export const addPurchaseAC = (newPurchase: CardType) => ({type: 'cart/ADD-PURCHASE', newPurchase} as const)
 export const setPurchasesAC = (cartItems: CardType[]) => ({type: 'cart/SET-PURCHASE', cartItems} as const)
+export const setPurchaseCount = (count: number) => ({type: 'cart/SET-PURCHASE-COUNT', count} as const)
 
 //thunks
 export const addPurchase = (purchaseId: string): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
     const cards = getState().cards.cards
     const filteredPurchase = cards.find((c: any) => {
-       return c.cardId === purchaseId
+        return c.cardId === purchaseId
     })
     filteredPurchase && dispatch(addPurchaseAC(filteredPurchase))
 
@@ -42,9 +48,13 @@ export const addPurchase = (purchaseId: string): ThunkType => async (dispatch, g
         })
 
 }
-export const getPurchases = (): ThunkType => async (dispatch) => {
+export const getPurchases = (): ThunkType => async (dispatch,getState) => {
     dispatch(setAppStatusAC('loading'))
+
     const data = await cartApi.fetchPurchases()
+    // const cartItems = getState().cart.purchases
+    // console.log(cartItems.length)
+    // dispatch(setPurchaseCount(cartItems.length))
     const filteredData: CardType[] = data.docs.map((doc) => {
         return {
             freeShipping: doc.data().freeShipping,
@@ -52,40 +62,50 @@ export const getPurchases = (): ThunkType => async (dispatch) => {
             name: doc.data().name,
             type: doc.data().type,
             price: doc.data().price,
-            cardId: doc.id
+            cardId: doc.id,
+            count: doc.data().count
 
         }
     })
     dispatch(setPurchasesAC(filteredData))
+    dispatch(setPurchaseCount(filteredData.length))
     dispatch(setAppStatusAC('succeeded'))
 }
 export const removePurchase = (purchaseId: string): ThunkType => async (dispatch, getState) => {
+
     dispatch(setAppStatusAC('loading'))
     await cartApi.removePurchase(purchaseId)
     dispatch(getPurchases())
+
     dispatch(setAppStatusAC('succeeded'))
 }
 export const sendOrder = (userData: CartFormValuesType): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
     const cartItems = getState().cart.purchases
-    const orderData ={
-        purchases:cartItems,
-        usersData:{...userData}
+    const orderData = {
+        purchases: cartItems,
+        usersData: {...userData, date:new Date()}
     }
-    cartApi.sendOrder(orderData).then(()=>{
-        dispatch(setAppStatusAC('succeeded'))
-    })
+    await cartApi.sendOrder(orderData)
+    dispatch(setAppStatusAC('succeeded'))
 }
+export const updatePurchase = (purchaseId: string, count: number): ThunkType => async (dispatch, getState) => {
+    dispatch(setAppStatusAC('loading'))
+    await cartApi.updatePurchaseCount(purchaseId, count)
+    dispatch(getPurchases())
+    dispatch(setAppStatusAC('loading'))
 
+}
 //types
 type InitialStateType = {
     purchases: CardType[]
+    count:number
 }
-
 type ThunkType = ThunkAction<any, RootStateType, {}, ActionsType>
 type ActionsType =
     | ReturnType<typeof addPurchaseAC>
     | ReturnType<typeof setPurchasesAC>
+    | ReturnType<typeof setPurchaseCount>
     | SetAppStatusActionType
 
 
