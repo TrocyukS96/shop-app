@@ -10,18 +10,19 @@ type ProductCardType = {
     name: string
     price: number
     freeShipping: boolean
-    cardId: string
+    cardId?: string
     addItemToCart:(itemId:string)=>void
     deleteCard:(itemId:string)=>void
 }
 export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping, price, cardId,addItemToCart, deleteCard}) => {
-    //hooks
 
     //handlers
     const addItemHandler =()=>{
+        cardId &&
         addItemToCart(cardId)
     }
     const removeItemHandler =()=>{
+        cardId &&
         deleteCard(cardId)
     }
     return (

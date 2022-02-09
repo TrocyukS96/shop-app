@@ -8,7 +8,7 @@ type CartItemType = {
     price: number
     type: string
     image: string
-    itemId: string
+    itemId?: string
     deleteCartItem: (cartItemId: string) => void
 }
 export const CartItem: FC<CartItemType> = ({
@@ -29,6 +29,7 @@ export const CartItem: FC<CartItemType> = ({
         setCounter(counter - 1)
     }
     const deleteCartItemHandler = () => {
+        itemId &&
         deleteCartItem(itemId)
     }
     return (

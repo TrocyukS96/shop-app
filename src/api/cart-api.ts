@@ -15,5 +15,8 @@ export const cartApi = {
     removePurchase(cardId:string){
         const deleteItem = doc(db,"cart", cardId)
         return deleteDoc(deleteItem)
-    }
+    },
+    sendOrder(orderData:any){
+        return addDoc(ordersCollectionRef, orderData)
+    },
 }

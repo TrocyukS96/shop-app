@@ -4,15 +4,14 @@ import s from './Cards.module.scss';
 import {AddCardForm} from "./addCardForm/AddCardForm";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../app/store";
-import { FilteredCardType } from "../../utils/types";
-import {addPurchase} from "../../bll/cartReducer";
-import { removeCard } from "../../bll/cards-reducer";
+import {addPurchase} from "../cart/cartReducer";
+import { removeCard } from "./cards-reducer";
+import {CardType} from "../../utils/types";
 
 export const Cards = () => {
     //hooks
     const dispatch = useDispatch()
-    // @ts-ignore
-    const cards = useSelector<RootStateType, Array<FilteredCardType> | FilteredCardType[]>(state => state.cards.cards)
+    const cards = useSelector<RootStateType, Array<CardType>>(state => state.cards.cards)
 
     //functions
     const addItemToCart = (itemId:string)=>{
@@ -27,7 +26,7 @@ export const Cards = () => {
             <div className={s.columns}>
                 <div className={s.cardsBlock}>
                     {
-                        cards.map((c: FilteredCardType, i: number) => {
+                        cards.map((c: CardType, i: number) => {
                             return <ProductCard
                                 img={c.image}
                                 type={c.type}
@@ -40,7 +39,6 @@ export const Cards = () => {
                                 deleteCard={deleteCard}
                             />
                         })
-
                     }
                 </div>
                 <AddCardForm/>

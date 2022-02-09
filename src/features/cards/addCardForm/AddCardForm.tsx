@@ -3,7 +3,7 @@ import s from './AddCardForm.module.scss';
 import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
 import {useDispatch} from "react-redux";
-import {addCard} from "../../../bll/cards-reducer";
+import {addCard} from "../cards-reducer";
 
 //types
 type FormValuesType = {

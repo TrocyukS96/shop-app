@@ -6,7 +6,7 @@ import {Logo} from "../components/logo/Logo";
 import {Cart} from "../features/cart/Cart";
 import {Cards} from "../features/cards/Cards";
 import {useDispatch, useSelector} from "react-redux";
-import {getCards} from "../bll/cards-reducer";
+import {getCards} from "../features/cards/cards-reducer";
 import {RootStateType} from "./store";
 import {RequestStatusType} from "../features/application/application-reducer";
 

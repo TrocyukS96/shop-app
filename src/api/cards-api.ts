@@ -4,6 +4,7 @@ import {CardType} from "../utils/types";
 
 const skatesCollectionRef = collection(db, "skates");
 
+
 //api
 export const cardsApi = {
      fetchCards(){

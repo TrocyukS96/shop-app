@@ -2,8 +2,10 @@ import React from 'react';
 import s from './CartForm.module.scss';
 import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
+import {useDispatch} from "react-redux";
+import {sendOrder} from "../cartReducer";
 //types
-type CartFormValuesType = {
+export type CartFormValuesType = {
     name: string
     surname: string
     address: string
@@ -11,6 +13,7 @@ type CartFormValuesType = {
 }
 
 export const CartForm = () => {
+    const dispatch =useDispatch()
     const formik = useFormik({
         validate: (values) => {
         },
@@ -23,6 +26,7 @@ export const CartForm = () => {
         onSubmit:  async(values: CartFormValuesType) => {
             alert(JSON.stringify(values))
             formik.resetForm()
+            dispatch(sendOrder(values))
         },
     })
     return (
