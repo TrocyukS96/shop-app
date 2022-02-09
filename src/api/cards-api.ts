@@ -1,4 +1,4 @@
-import {addDoc, collection, getDocs} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {db} from "../firebase";
 import {CardType} from "../utils/types";
 
@@ -11,5 +11,9 @@ export const cardsApi = {
     },
     addCard(cardData:CardType){
          return addDoc(skatesCollectionRef, cardData)
+    },
+    removeCard(cardId:string){
+        const deleteCard = doc(db,"skates", cardId)
+        return deleteDoc(deleteCard)
     }
 }

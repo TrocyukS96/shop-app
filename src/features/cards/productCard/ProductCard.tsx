@@ -3,8 +3,6 @@ import {Button, CardActions, CardMedia} from "@material-ui/core";
 import s from './ProductCard.module.scss';
 import {FC} from "react";
 import {FreeShippingCard} from "../../../components/freeShippingCard/FreeShippingCard";
-import {useDispatch} from "react-redux";
-import {addPurchase} from "../../../bll/cartReducer";
 
 type ProductCardType = {
     img: any
@@ -13,14 +11,18 @@ type ProductCardType = {
     price: number
     freeShipping: boolean
     cardId: string
+    addItemToCart:(itemId:string)=>void
+    deleteCard:(itemId:string)=>void
 }
-export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping, price, cardId}) => {
+export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping, price, cardId,addItemToCart, deleteCard}) => {
     //hooks
-    const dispatch = useDispatch()
 
     //handlers
-    const addNewPurchase = () => {
-        dispatch(addPurchase(cardId))
+    const addItemHandler =()=>{
+        addItemToCart(cardId)
+    }
+    const removeItemHandler =()=>{
+        deleteCard(cardId)
     }
     return (
         <div className={s.wrapper}>
@@ -38,9 +40,10 @@ export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping,
             </CardContent>
             {freeShipping && <FreeShippingCard className={s.freeCard}/>}
             <CardActions style={{justifyContent: "center"}}>
-                <Button size="small" variant='contained' color='primary' className={s.cardBtn} onClick={addNewPurchase}>add
+                <Button size="small" variant='contained' color='primary' className={s.cardBtn} onClick={addItemHandler}>add
                     to cart</Button>
             </CardActions>
+            <button className={s.deleteCardBtn} onClick={removeItemHandler}>x</button>
         </div>
     )
 }

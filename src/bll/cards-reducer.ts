@@ -4,6 +4,8 @@ import {setAppStatusAC, SetAppStatusActionType} from "../features/application/ap
 import { RootStateType} from "../app/store";
 import {ThunkAction} from "redux-thunk";
 import {CardType, FilteredCardType } from '../utils/types';
+import {cartApi} from "../api/cart-api";
+import {getPurchases} from "./cartReducer";
 
 const initialState = {
     cards: [] as Array<FilteredCardType>,
@@ -80,9 +82,14 @@ export const addCard = (newCard: CardType): ThunkType =>async (dispatch) => {
         dispatch(getCards())
         dispatch(setAppStatusAC('succeeded'))
     })
-
-
 }
+export const removeCard = (cardId: string): ThunkType => async (dispatch, getState) => {
+    dispatch(setAppStatusAC('loading'))
+    await cardsApi.removeCard(cardId)
+        .then(()=>dispatch(getCards()))
+    dispatch(setAppStatusAC('succeeded'))
+}
+
 // export const deleteCardTC = (packId: string, cardId: string): ThunkType => (dispatch) => {
 //     dispatch(setAppStatusAC('loading'))
 //     cardsApi.deleteCard(cardId).then(
