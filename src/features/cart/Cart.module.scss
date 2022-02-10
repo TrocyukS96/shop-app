@@ -10,6 +10,40 @@
 .productsBlock{
   height: 460px;
   overflow-y: auto;
+
+
 }
 
+}
+
+.cartModal{
+  width: 400px;
+  height: 100px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  background-color: rgba(28, 119, 201, 0.48);
+
+  color:#fff;
+
+  .cartModalBtn{
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    border-style: none;
+    background-color: transparent;
+
+    font-weight: 500;
+    font-size: 20px;
+    color:red;
+  }
 }

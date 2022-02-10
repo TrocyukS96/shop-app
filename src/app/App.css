@@ -55,3 +55,8 @@
 
   grid-gap:60px;
 }
+.cartLink{
+  color: #fff;
+
+  text-decoration: none;
+}

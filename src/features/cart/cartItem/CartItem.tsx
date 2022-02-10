@@ -1,5 +1,8 @@
 import React, {FC, useState} from 'react';
 import s from './CartItem.module.scss';
+import {useSelector} from "react-redux";
+import {RootStateType} from "../../../store";
+import {RequestStatusType} from "../../application/application-reducer";
 
 //types
 type CartItemType = {
@@ -22,7 +25,10 @@ export const CartItem: FC<CartItemType> = ({
                                                updateCartItem,
                                                itemCount
                                            }) => {
-    //handlers
+    //hooks
+    const status=useSelector<RootStateType, RequestStatusType>(st=>st.app.status)
+
+        //handlers
     const toIncrCartItemHandler = () => {
         itemId && itemCount &&
         updateCartItem(itemId, itemCount+1)
@@ -48,11 +54,11 @@ export const CartItem: FC<CartItemType> = ({
             </p>
 
             <div className={s.btnBlock}>
-                <button onClick={toDecrCartItemHandler}>-</button>
+                <button onClick={toDecrCartItemHandler} >-</button>
                 <span>{itemCount}</span>
-                <button onClick={toIncrCartItemHandler}>+</button>
+                <button onClick={toIncrCartItemHandler} >+</button>
             </div>
-            <button className={s.deleteItemBtn} onClick={deleteCartItemHandler}>x</button>
+            <button className={s.deleteItemBtn} onClick={deleteCartItemHandler} disabled={status==='loading'}>x</button>
         </div>
     )
 }

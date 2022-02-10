@@ -1,11 +1,11 @@
 import React from 'react';
-import {Link} from "@material-ui/core";
-
+import {NavLink} from 'react-router-dom';
+import s from './Logo.module.scss';
 
 export const Logo = () => {
     return (
-            <div>
-                <Link color="inherit"  href={'/products'}>SHOP-APP</Link>
+            <div className={s.logo}>
+                <NavLink className={s.logoLink} color="inherit"  to={'/products'}>SHOP-APP</NavLink>
             </div>
     )
 }

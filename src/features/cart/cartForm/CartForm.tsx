@@ -2,17 +2,22 @@ import React from 'react';
 import s from './CartForm.module.scss';
 import {Button, TextField} from "@material-ui/core";
 import {useFormik} from "formik";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {sendOrder} from "../cartReducer";
+import {RootStateType} from "../../../store";
 //types
 export type CartFormValuesType = {
     name: string
     surname: string
     address: string
-    phone: string
-}
+    phone: string,
 
-export const CartForm = () => {
+}
+type CartFormType={
+    setOpen:(value:boolean)=>void
+}
+export const CartForm = React.memo((props:CartFormType) => {
+    const isSendOrder = useSelector<RootStateType, boolean>(st => st.cart.isSendOrder)
     const dispatch =useDispatch()
     const formik = useFormik({
         validate: (values) => {
@@ -24,9 +29,13 @@ export const CartForm = () => {
             phone: ''
         },
         onSubmit:  async(values: CartFormValuesType) => {
-            alert(JSON.stringify(values))
             formik.resetForm()
             dispatch(sendOrder(values))
+            if(isSendOrder){
+                setTimeout(()=>{
+                    props.setOpen(true)
+                })
+            }
         },
     })
     return (
@@ -60,6 +69,6 @@ export const CartForm = () => {
 
         </form>
     )
-}
+})
 
 

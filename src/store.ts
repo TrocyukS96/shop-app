@@ -1,8 +1,8 @@
 import {applyMiddleware, combineReducers, createStore} from "@reduxjs/toolkit";
-import {cardsReducer} from "../features/cards/cards-reducer";
+import {cardsReducer} from "./features/cards/cards-reducer";
 import thunk, {ThunkAction} from "redux-thunk";
-import {appReducer} from "../features/application/application-reducer";
-import {cartReducer} from "../features/cart/cartReducer";
+import {appReducer} from "./features/application/application-reducer";
+import {cartReducer} from "./features/cart/cartReducer";
 
 const rootReducer = combineReducers({
     cards: cardsReducer,

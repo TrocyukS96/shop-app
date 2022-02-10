@@ -3,15 +3,18 @@ import {ProductCard} from "./productCard/ProductCard";
 import s from './Cards.module.scss';
 import {AddCardForm} from "./addCardForm/AddCardForm";
 import {useDispatch, useSelector} from "react-redux";
-import {RootStateType} from "../../app/store";
+import {RootStateType} from "../../store";
 import {addPurchase} from "../cart/cartReducer";
 import { removeCard } from "./cards-reducer";
 import {CardType} from "../../utils/types";
+import {RequestStatusType} from "../application/application-reducer";
+import {CircularProgress} from "@material-ui/core";
 
-export const Cards = () => {
+export const Cards = React.memo(() => {
     //hooks
     const dispatch = useDispatch()
     const cards = useSelector<RootStateType, Array<CardType>>(state => state.cards.cards)
+    const status = useSelector<RootStateType, RequestStatusType>(st => st.app.status)
 
     //functions
     const addItemToCart = (itemId:string)=>{
@@ -25,6 +28,7 @@ export const Cards = () => {
             <h2>Skates</h2>
             <div className={s.columns}>
                 <div className={s.cardsBlock}>
+                    {status === 'loading' && <CircularProgress style={{width:'100px', height:'100px'}}/>}
                     {
                         cards.map((c: CardType, i: number) => {
                             return <ProductCard
@@ -45,6 +49,6 @@ export const Cards = () => {
             </div>
         </div>
     )
-}
+})
 
 

@@ -1,7 +1,7 @@
 import {Dispatch} from 'redux';
 import {cardsApi} from "../../api/cards-api";
 import {setAppStatusAC, SetAppStatusActionType} from "../application/application-reducer";
-import {RootStateType} from "../../app/store";
+import {RootStateType} from "../../store";
 import {ThunkAction} from "redux-thunk";
 import {CardType} from '../../utils/types';
 

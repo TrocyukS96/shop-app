@@ -3,6 +3,10 @@ import {Button, CardActions, CardMedia} from "@material-ui/core";
 import s from './ProductCard.module.scss';
 import {FC} from "react";
 import {FreeShippingCard} from "../../../components/freeShippingCard/FreeShippingCard";
+import {useSelector} from "react-redux";
+import {RootStateType} from "../../../store";
+import {RequestStatusType} from "../../application/application-reducer";
+import React from "react";
 
 type ProductCardType = {
     img: any
@@ -11,17 +15,28 @@ type ProductCardType = {
     price: number
     freeShipping: boolean
     cardId?: string
-    addItemToCart:(itemId:string)=>void
-    deleteCard:(itemId:string)=>void
+    addItemToCart: (itemId: string) => void
+    deleteCard: (itemId: string) => void
 }
-export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping, price, cardId,addItemToCart, deleteCard}) => {
+export const ProductCard: FC<ProductCardType> = React.memo((({
+                                                     img,
+                                                     type,
+                                                     name,
+                                                     freeShipping,
+                                                     price,
+                                                     cardId,
+                                                     addItemToCart,
+                                                     deleteCard
+                                                 }) => {
+    //hooks
+    const status=useSelector<RootStateType, RequestStatusType>(st=>st.app.status)
 
     //handlers
-    const addItemHandler =()=>{
+    const addItemHandler = () => {
         cardId &&
         addItemToCart(cardId)
     }
-    const removeItemHandler =()=>{
+    const removeItemHandler = () => {
         cardId &&
         deleteCard(cardId)
     }
@@ -41,12 +56,23 @@ export const ProductCard: FC<ProductCardType> = ({img, type, name, freeShipping,
             </CardContent>
             {freeShipping && <FreeShippingCard className={s.freeCard}/>}
             <CardActions style={{justifyContent: "center"}}>
-                <Button size="small" variant='contained' color='primary' className={s.cardBtn} onClick={addItemHandler}>add
+                <Button
+                    size="small"
+                    variant='contained'
+                    color='primary'
+                    className={s.cardBtn}
+                    onClick={addItemHandler}
+                    disabled={status==='loading'}
+                >add
                     to cart</Button>
             </CardActions>
-            <button className={s.deleteCardBtn} onClick={removeItemHandler}>x</button>
+            <button
+                className={s.deleteCardBtn}
+                onClick={removeItemHandler}
+                disabled={status==='loading'}
+            >x</button>
         </div>
     )
 }
-
+))
 
