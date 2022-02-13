@@ -17,7 +17,10 @@ export const cardsReducer = (state: InitialStateType = initialState, action: Act
             }
         case 'cards/ADD-CARD':
             return {...state, cards: [...state.cards, action.newCard]}
-
+        case 'cards/REMOVE-CARD':
+            return{
+                ...state, cards: state.cards.filter(p=>p.cardId!=action.cardId)
+            }
         default:
             return state
     }
@@ -25,6 +28,7 @@ export const cardsReducer = (state: InitialStateType = initialState, action: Act
 //actionCreators
 export const setCardsAc = (cards: CardType[]) => ({type: 'cards/SET-CARDS', cards} as const)
 export const addCardAc = (newCard: CardType) => ({type: 'cards/ADD-CARD', newCard} as const)
+export const removeCardAc = (cardId: string) => ({type: 'cards/REMOVE-CARD', cardId} as const)
 
 //thunks
 export const getCards = () => async (dispatch: Dispatch) => {
@@ -65,6 +69,7 @@ type ActionsType =
     | ReturnType<typeof setCardsAc>
     | SetAppStatusActionType
     | ReturnType<typeof addCardAc>
+    | ReturnType<typeof removeCardAc>
 
 
 
