@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {ProductCard} from "./productCard/ProductCard";
 import s from './Cards.module.scss';
 import {AddCardForm} from "./addCardForm/AddCardForm";
@@ -8,14 +8,15 @@ import {addPurchase} from "../cart/cartReducer";
 import { removeCard } from "./cards-reducer";
 import {CardType} from "../../utils/types";
 import {RequestStatusType} from "../application/application-reducer";
-import {CircularProgress} from "@material-ui/core";
+import {Box, Button, CircularProgress, Modal, Typography} from "@material-ui/core";
 
 export const Cards = React.memo(() => {
     //hooks
     const dispatch = useDispatch()
     const cards = useSelector<RootStateType, Array<CardType>>(state => state.cards.cards)
     const status = useSelector<RootStateType, RequestStatusType>(st => st.app.status)
-
+    const [open, setOpen] = useState(true);
+    const handleClose = () => setOpen(false);
     //functions
     const addItemToCart = (itemId:string)=>{
         dispatch(addPurchase(itemId))
@@ -45,7 +46,25 @@ export const Cards = React.memo(() => {
                         })
                     }
                 </div>
-                <AddCardForm/>
+                <Button
+                    className={s.addCardBtn}
+                    onClick={()=>setOpen(true)}
+                    variant={'contained'}
+                    color={'primary'}
+                >add new card</Button>
+                <Modal
+                    open={open} onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description">
+
+                    <Box className={s.cartModal}>
+                        {/*//@ts-ignore*/}
+                        <Typography id="modal-modal-description" sx={{mt: 2}} className={s.cartModalText}>
+                            <AddCardForm/>
+                        </Typography>
+                        <button onClick={handleClose} className={s.cartModalBtn}>x</button>
+                    </Box>
+                </Modal>
             </div>
         </div>
     )
