@@ -29,6 +29,10 @@ export const cartReducer = (state: InitialStateType = initialState, action: Acti
             return {
                 ...state, isSendOrder: action.value,
             }
+        case 'cart/REMOVE-PURCHASE':
+            return{
+                ...state, purchases: state.purchases.filter(p=>p.cardId!=action.cartId)
+            }
         default:
             return state
     }
@@ -38,7 +42,7 @@ export const addPurchaseAC = (newPurchase: CardType) => ({type: 'cart/ADD-PURCHA
 export const setPurchasesAC = (cartItems: CardType[]) => ({type: 'cart/SET-PURCHASE', cartItems} as const)
 export const setPurchaseCount = (count: number) => ({type: 'cart/SET-PURCHASE-COUNT', count} as const)
 export const isSendValueAC = (value: boolean) => ({type: 'cart/SET-IS-SEND-ORDER', value} as const)
-
+export const removePurchaseAC = (cartId:string)=>({type: 'cart/REMOVE-PURCHASE', cartId} as const)
 //thunks
 export const addPurchase = (purchaseId: string): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
@@ -104,7 +108,7 @@ export const updatePurchase = (purchaseId: string, count: number): ThunkType => 
 
 }
 //types
-type InitialStateType = {
+export type InitialStateType = {
     purchases: CardType[]
     count:number
     isSendOrder:boolean
@@ -115,6 +119,7 @@ type ActionsType =
     | ReturnType<typeof setPurchasesAC>
     | ReturnType<typeof setPurchaseCount>
     | ReturnType<typeof isSendValueAC>
+    | ReturnType<typeof removePurchaseAC>
     | SetAppStatusActionType
 
 
