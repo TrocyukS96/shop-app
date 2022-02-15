@@ -15,7 +15,7 @@ export const Cards = React.memo(() => {
     const dispatch = useDispatch()
     const cards = useSelector<RootStateType, Array<CardType>>(state => state.cards.cards)
     const status = useSelector<RootStateType, RequestStatusType>(st => st.app.status)
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     //functions
     const addItemToCart = (itemId:string)=>{

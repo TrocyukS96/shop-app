@@ -1,4 +1,4 @@
-import {applyMiddleware, combineReducers, createStore} from "@reduxjs/toolkit";
+import {applyMiddleware, combineReducers, configureStore, createStore} from "@reduxjs/toolkit";
 import {cardsReducer} from "./features/cards/cards-reducer";
 import thunk, {ThunkAction} from "redux-thunk";
 import {appReducer} from "./features/application/application-reducer";
@@ -10,7 +10,11 @@ const rootReducer = combineReducers({
     cart:cartReducer
 })
 
-export const store = createStore(rootReducer, applyMiddleware(thunk))
+// export const store = createStore(rootReducer, applyMiddleware(thunk))
+export const store = configureStore({
+    reducer:rootReducer,
+    middleware:getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
+})
 export type RootStateType = ReturnType<typeof rootReducer>
 export type AppThunkType<ReturnType = void> = ThunkAction<ReturnType, RootStateType, unknown,any>
 

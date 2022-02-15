@@ -4,31 +4,38 @@ import {setAppStatusAC, SetAppStatusActionType} from "../application/application
 import {RootStateType} from "../../store";
 import {ThunkAction} from "redux-thunk";
 import {CardType} from '../../utils/types';
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 const initialState = {
     cards: [] as Array<CardType>,
 }
 
-export const cardsReducer = (state: InitialStateType = initialState, action: ActionsType) => {
-    switch (action.type) {
-        case 'cards/SET-CARDS':
+
+export const slice = createSlice({
+    name:'cards',
+    initialState,
+    reducers:{
+        setCardsAc(state, action:PayloadAction<{cards:CardType[]}>){
             return {
-                ...state, cards: [...action.cards],
+                state, cards: [...action.payload.cards],
             }
-        case 'cards/ADD-CARD':
-            return {...state, cards: [...state.cards, action.newCard]}
-        case 'cards/REMOVE-CARD':
+        },addCardAc(state, action:PayloadAction<{newCard:CardType}>){
+            return {state, cards: [...state.cards, action.payload.newCard]}
+        },removeCardAc(state, action:PayloadAction<{ cardId: string }>){
             return{
-                ...state, cards: state.cards.filter(p=>p.cardId!=action.cardId)
+                state, cards: state.cards.filter(p=>p.cardId!=action.payload.cardId)
             }
-        default:
-            return state
-    }
-}
+        }
+
+    },
+
+})
+export const {setCardsAc,addCardAc,removeCardAc} = slice.actions
+export const cardsReducer = slice.reducer
 //actionCreators
-export const setCardsAc = (cards: CardType[]) => ({type: 'cards/SET-CARDS', cards} as const)
-export const addCardAc = (newCard: CardType) => ({type: 'cards/ADD-CARD', newCard} as const)
-export const removeCardAc = (cardId: string) => ({type: 'cards/REMOVE-CARD', cardId} as const)
+//export const setCardsAc = (cards: CardType[]) => ({type: 'cards/SET-CARDS', cards} as const)
+// export const addCardAc = (newCard: CardType) => ({type: 'cards/ADD-CARD', newCard} as const)
+// export const removeCardAc = (cardId: string) => ({type: 'cards/REMOVE-CARD', cardId} as const)
 
 //thunks
 export const getCards = () => async (dispatch: Dispatch) => {
@@ -45,7 +52,7 @@ export const getCards = () => async (dispatch: Dispatch) => {
             count:doc.data().count
         }
     })
-    dispatch(setCardsAc(filteredData))
+    dispatch(setCardsAc({cards:filteredData}))
     dispatch(setAppStatusAC('succeeded'))
 }
 export const addCard = (newCard: CardType): ThunkType =>async (dispatch) => {
@@ -64,12 +71,12 @@ export const removeCard = (cardId: string): ThunkType => async (dispatch, getSta
 
 //types
 export type InitialStateType = typeof initialState
-type ThunkType = ThunkAction<any, RootStateType, {}, ActionsType>
-type ActionsType =
-    | ReturnType<typeof setCardsAc>
-    | SetAppStatusActionType
-    | ReturnType<typeof addCardAc>
-    | ReturnType<typeof removeCardAc>
+type ThunkType = ThunkAction<any, RootStateType, {}, any>
+// type ActionsType =
+//     | ReturnType<typeof setCardsAc>
+//     | SetAppStatusActionType
+//     | ReturnType<typeof addCardAc>
+//     | ReturnType<typeof removeCardAc>
 
 
 

@@ -2,8 +2,8 @@ import {v1} from 'uuid';
 import { CardType } from '../../utils/types';
 import cartImage1 from './../../assets/images/skates/alphaCapriceFrostySilver.jpg';
 import cartImage2 from './../../assets/images/skates/alphaCapricePlayer.jpg';
-
 import {addCardAc, cardsReducer, InitialStateType, removeCardAc} from "./cards-reducer";
+
 
 let card1Id = v1()
 let card2Id = v1()
@@ -20,7 +20,7 @@ beforeEach(() => {
 
 test('card should be removed', ()=>{
 
-    const endState = cardsReducer(startState, removeCardAc(card1Id))
+    const endState = cardsReducer(startState, removeCardAc({cardId:card1Id}))
 
     expect(endState.cards.length).toBe(1)
 })
@@ -36,7 +36,7 @@ test('card should be added', ()=>{
         freeShipping:true
     }
 
-    const endState = cardsReducer(startState, addCardAc(newCard))
+    const endState = cardsReducer(startState, addCardAc({newCard:newCard}))
 
     expect(endState.cards.length).toBe(3)
     expect(endState.cards[2].price).toBe(40)
