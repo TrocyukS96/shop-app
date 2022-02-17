@@ -1,56 +1,54 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootStateType} from '../../store';
-import {setAppStatusAC, SetAppStatusActionType} from "../application/application-reducer";
+import {setAppStatusAC} from "../application/application-reducer";
 import {cartApi} from "../../api/cart-api";
 import {CartFormValuesType} from "./cartForm/CartForm";
 import {CardType} from "../../utils/types";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 //initialValue
-const initialState: InitialStateType = {
-    purchases: [] as CardType[],
-    count:0,
-    isSendOrder:false
+const initialState = {
+    cartItems: [] as CardType[],
+    count: 0,
+    isSendOrder: false
 }
 
-export const cartReducer = (state: InitialStateType = initialState, action: ActionsType) => {
-    switch (action.type) {
-        case 'cart/ADD-PURCHASE':
-            debugger
-            return {...state, purchases: [...state.purchases, action.newPurchase]}
-        case 'cart/SET-PURCHASE':
-            return {
-                ...state, purchases: [...action.cartItems],
+export const slice = createSlice({
+    name: 'cart',
+    initialState,
+    reducers: {
+        addPurchaseAC(state, action: PayloadAction<{ newCardItem: CardType }>) {
+            state.cartItems.push(action.payload.newCardItem)
+        },
+        setPurchasesAC(state, action: PayloadAction<{ cartItems: CardType[] }>) {
+            state.cartItems = [...action.payload.cartItems]
+        },
+        setPurchaseCountAC(state, action: PayloadAction<{ count: number }>) {
+            state.count = action.payload.count
+        },
+        isSendValueAC(state, action: PayloadAction<{ value: boolean }>) {
+            state.isSendOrder = action.payload.value
+        },
+        removePurchaseAC(state, action: PayloadAction<{ cartId: string }>) {
+            const index = state.cartItems.findIndex(tl => tl.cardId === action.payload.cartId)
+            if (index > -1) {
+                state.cartItems.slice(index, 1)
             }
-        case 'cart/SET-PURCHASE-COUNT':
-            return {
-                ...state, count: action.count,
-            }
-        case 'cart/SET-IS-SEND-ORDER':
-            return {
-                ...state, isSendOrder: action.value,
-            }
-        case 'cart/REMOVE-PURCHASE':
-            return{
-                ...state, purchases: state.purchases.filter(p=>p.cardId!=action.cartId)
-            }
-        default:
-            return state
+        },
     }
-}
-//actionCreators
-export const addPurchaseAC = (newPurchase: CardType) => ({type: 'cart/ADD-PURCHASE', newPurchase} as const)
-export const setPurchasesAC = (cartItems: CardType[]) => ({type: 'cart/SET-PURCHASE', cartItems} as const)
-export const setPurchaseCount = (count: number) => ({type: 'cart/SET-PURCHASE-COUNT', count} as const)
-export const isSendValueAC = (value: boolean) => ({type: 'cart/SET-IS-SEND-ORDER', value} as const)
-export const removePurchaseAC = (cartId:string)=>({type: 'cart/REMOVE-PURCHASE', cartId} as const)
+})
+export const {addPurchaseAC, setPurchasesAC, setPurchaseCountAC, isSendValueAC, removePurchaseAC} = slice.actions
+export const cartReducer = slice.reducer
+
+
 //thunks
 export const addPurchase = (purchaseId: string): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
     const cards = getState().cards.cards
-    const filteredPurchase = cards.find((c: any) => {
+    const filteredPurchase = cards.find((c: CardType) => {
         return c.cardId === purchaseId
     })
-    filteredPurchase && dispatch(addPurchaseAC(filteredPurchase))
+    filteredPurchase && dispatch(addPurchaseAC({newCardItem: filteredPurchase}))
 
     cartApi.addPurchase(filteredPurchase)
         .then(() => {
@@ -58,9 +56,10 @@ export const addPurchase = (purchaseId: string): ThunkType => async (dispatch, g
             dispatch(setAppStatusAC('succeeded'))
             dispatch(getPurchases())
         })
-
 }
-export const getPurchases = (): ThunkType => async (dispatch,getState) => {
+
+
+export const getPurchases = (): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
 
     const data = await cartApi.fetchPurchases()
@@ -73,14 +72,13 @@ export const getPurchases = (): ThunkType => async (dispatch,getState) => {
             price: doc.data().price,
             cardId: doc.id,
             count: doc.data().count
-
         }
     })
-    dispatch(setPurchasesAC(filteredData))
-    dispatch(setPurchaseCount(filteredData.length))
+    dispatch(setPurchasesAC({cartItems: filteredData}))
+    dispatch(setPurchaseCountAC({count: filteredData.length}))
     dispatch(setAppStatusAC('succeeded'))
 }
-export const removePurchase = (purchaseId: string): ThunkType => async (dispatch, getState) => {
+export const removePurchase = (purchaseId: string): ThunkType => async (dispatch) => {
 
     dispatch(setAppStatusAC('loading'))
     await cartApi.removePurchase(purchaseId)
@@ -90,37 +88,26 @@ export const removePurchase = (purchaseId: string): ThunkType => async (dispatch
 }
 export const sendOrder = (userData: CartFormValuesType): ThunkType => async (dispatch, getState) => {
     dispatch(setAppStatusAC('loading'))
-    const cartItems = getState().cart.purchases
+    const cartItems = getState().cart.cartItems
     const orderData = {
         purchases: cartItems,
-        usersData: {...userData, date:new Date()}
+        usersData: {...userData, date: new Date()}
     }
     await cartApi.sendOrder(orderData)
     dispatch(setAppStatusAC('succeeded'))
-    dispatch(isSendValueAC(true))
+    dispatch(isSendValueAC({value: true}))
 
 }
-export const updatePurchase = (purchaseId: string, count: number): ThunkType => async (dispatch, getState) => {
+export const updatePurchase = (purchaseId: string, count: number): ThunkType => async (dispatch) => {
     dispatch(setAppStatusAC('loading'))
     await cartApi.updatePurchaseCount(purchaseId, count)
     dispatch(getPurchases())
     dispatch(setAppStatusAC('loading'))
-
 }
 //types
-export type InitialStateType = {
-    purchases: CardType[]
-    count:number
-    isSendOrder:boolean
-}
-type ThunkType = ThunkAction<any, RootStateType, {}, ActionsType>
-type ActionsType =
-    | ReturnType<typeof addPurchaseAC>
-    | ReturnType<typeof setPurchasesAC>
-    | ReturnType<typeof setPurchaseCount>
-    | ReturnType<typeof isSendValueAC>
-    | ReturnType<typeof removePurchaseAC>
-    | SetAppStatusActionType
+export type InitialStateType = typeof initialState
+type ThunkType = ThunkAction<any, RootStateType, {}, any>
+
 
 
 

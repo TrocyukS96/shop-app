@@ -32,10 +32,6 @@ export const slice = createSlice({
 })
 export const {setCardsAc,addCardAc,removeCardAc} = slice.actions
 export const cardsReducer = slice.reducer
-//actionCreators
-//export const setCardsAc = (cards: CardType[]) => ({type: 'cards/SET-CARDS', cards} as const)
-// export const addCardAc = (newCard: CardType) => ({type: 'cards/ADD-CARD', newCard} as const)
-// export const removeCardAc = (cardId: string) => ({type: 'cards/REMOVE-CARD', cardId} as const)
 
 //thunks
 export const getCards = () => async (dispatch: Dispatch) => {

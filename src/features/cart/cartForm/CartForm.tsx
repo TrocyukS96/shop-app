@@ -15,6 +15,7 @@ export type CartFormValuesType = {
 }
 type CartFormType={
     setOpen:(value:boolean)=>void
+    className:string
 }
 export const CartForm = React.memo((props:CartFormType) => {
     const isSendOrder = useSelector<RootStateType, boolean>(st => st.cart.isSendOrder)
@@ -38,6 +39,7 @@ export const CartForm = React.memo((props:CartFormType) => {
             }
         },
     })
+    // const finalClassName = props.className ? `${s.cartForm} ${props.className}` : `${s.cartForm}`
     return (
         <form className={s.cartForm} onSubmit={formik.handleSubmit}>
                 <TextField

@@ -34,6 +34,12 @@
   .deleteCardBtn{
     position: absolute;
     top: 0;
-    right: 0;
+    right: -10px;
+
+    border-style: none;
+
+    background-color: transparent;
+
+    transition: all .3s ease;
   }
 }

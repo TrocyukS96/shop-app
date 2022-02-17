@@ -10,7 +10,7 @@ let startState:InitialStateType
 
 beforeEach(() => {
     startState= {
-        purchases:[
+        cartItems:[
             {cardId:cart1Id, count:1, image:cartImage1, name:'cart1', type:'ice skates', price:20, freeShipping:false},
             {cardId:cart2Id, count:1, image:cartImage2, name:'cart2', type:'ice skates', price:30, freeShipping:false}
         ],
@@ -22,13 +22,13 @@ beforeEach(() => {
 
 test('cart should be removed', ()=>{
 
-    const endState = cartReducer(startState, removePurchaseAC(cart1Id))
+    const endState = cartReducer(startState, removePurchaseAC({cartId:cart1Id}))
 
-    expect(endState.purchases.length).toBe(1)
+    expect(endState.cartItems.length).toBe(1)
 })
 
 test('cart should be added', ()=>{
-    const newPurchase:CardType = {
+    const newCartItem:CardType = {
        cardId:v1(),
        count:1,
        image:'newCardImage',
@@ -38,15 +38,15 @@ test('cart should be added', ()=>{
        freeShipping:true
     }
 
-    const endState = cartReducer(startState, addPurchaseAC(newPurchase))
+    const endState = cartReducer(startState, addPurchaseAC({newCardItem:newCartItem}))
 
-    expect(endState.purchases.length).toBe(3)
-    expect(endState.purchases[2].price).toBe(40)
+    expect(endState.cartItems.length).toBe(3)
+    expect(endState.cartItems[2].price).toBe(40)
 })
 
 test('isSendOrder is change on true', ()=>{
 
-    const endState = cartReducer(startState, isSendValueAC(true))
+    const endState = cartReducer(startState, isSendValueAC({value:true}))
 
     expect(endState.isSendOrder).toBe(true)
 })

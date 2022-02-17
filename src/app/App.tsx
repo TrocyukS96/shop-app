@@ -8,7 +8,6 @@ import {Cards} from "../features/cards/Cards";
 import {useDispatch, useSelector} from "react-redux";
 import {getCards} from "../features/cards/cards-reducer";
 import {RootStateType} from "../store";
-import {RequestStatusType} from "../features/application/application-reducer";
 import {getPurchases} from "../features/cart/cartReducer";
 
 function App() {
@@ -20,6 +19,8 @@ function App() {
         dispatch(getPurchases())
     }, [dispatch, cartItemsCount]);
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <div className="App">
             <div className="App">
@@ -43,9 +44,11 @@ function App() {
                 </AppBar>
 
                 <Grid container spacing={2} justifyContent="center">
-                        <Route exact path={"/products"} render={() => <Cards/>}/>
-                        <Route exact path={"/cart"} render={() => <Cart/>}/>
-                        <Redirect from='/' to='/products'/>
+                    {/*@ts-ignore*/}
+                    <Route exact path={"/products"} render={() => <Cards/>}/>
+                    {/*@ts-ignore*/}
+                    <Route path={"/cart"} render={() => <Cart/>}/>
+                    <Redirect from='/' to='/products'/>
                 </Grid>
             </div>
         </div>

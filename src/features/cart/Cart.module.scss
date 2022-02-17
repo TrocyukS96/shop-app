@@ -1,4 +1,4 @@
-.cart{
+.cart {
   margin-top: 100px;
 
   display: flex;
@@ -7,16 +7,13 @@
   gap: 50px;
 
 
-.productsBlock{
-  height: 460px;
-  overflow-y: auto;
-
-
-}
+  .productsBlock {
+    height: 460px;
+  }
 
 }
 
-.cartModal{
+.cartModal {
   width: 400px;
   height: 100px;
 
@@ -32,9 +29,9 @@
 
   background-color: rgba(28, 119, 201, 0.48);
 
-  color:#fff;
+  color: #fff;
 
-  .cartModalBtn{
+  .cartModalBtn {
     position: absolute;
     right: 0;
     top: 0;
@@ -44,6 +41,7 @@
 
     font-weight: 500;
     font-size: 20px;
-    color:red;
+    color: red;
   }
 }
+

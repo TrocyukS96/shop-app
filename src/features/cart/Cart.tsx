@@ -24,7 +24,7 @@ const style = {
 export const Cart: FC = React.memo(() => {
     //hooks
     const dispatch = useDispatch()
-    const purchases = useSelector<RootStateType, CardType[]>(state => state.cart.purchases)
+    const cartItems = useSelector<RootStateType, CardType[]>(state => state.cart.cartItems)
     const isSendOrder = useSelector<RootStateType, boolean>(st => st.cart.isSendOrder)
     const status = useSelector<RootStateType, RequestStatusType>(st => st.app.status)
     const [open, setOpen] = useState(isSendOrder);
@@ -40,7 +40,7 @@ export const Cart: FC = React.memo(() => {
     const updateCartItem = (cartItemId: string, count: number) => {
         dispatch(updatePurchase(cartItemId, count))
     }
-    const mappedPurchases = purchases.map((p, index) => {
+    const mappedPurchases = cartItems.map((p, index) => {
         return <CartItem key={index} name={p.name}
                          price={p.price} type={p.type}
                          image={p.image} itemId={p.cardId}
@@ -50,15 +50,13 @@ export const Cart: FC = React.memo(() => {
         />
     })
 
-    // alert(isSendOrder)
-    console.log('isSendOrder'+'-'+ isSendOrder)
     return (
         <div className={s.cart}>
             <div className={s.productsBlock}>
                 {mappedPurchases}
                 {mappedPurchases.length === 0 ? <h3>No purchases yet...</h3> : ''}
             </div>
-            <CartForm setOpen={setOpen}/>
+            <CartForm setOpen={setOpen} className={s.cartForm}/>
             {status === 'loading' && <CircularProgress/>}
             <Modal
                 open={open} onClose={handleClose}
@@ -67,9 +65,9 @@ export const Cart: FC = React.memo(() => {
 
                 <Box className={s.cartModal}>
                     {/*//@ts-ignore*/}
-                        <Typography id="modal-modal-description" sx={{mt: 2}} className={s.cartModalText}>
-                            Your order has been placed
-                        </Typography>
+                    <Typography id="modal-modal-description" sx={{mt: 2}} className={s.cartModalText}>
+                        Your order has been placed
+                    </Typography>
                     <button onClick={handleClose} className={s.cartModalBtn}>x</button>
                 </Box>
             </Modal>
